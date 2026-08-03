@@ -1,0 +1,30 @@
+PAYMENT PROCESSING REQUIREMENTS
+
+REQ-001: Payment Amount Validation
+The system shall accept payment amounts between £0.01 and £999,999.99.
+Amounts below £0.01 or above £999,999.99 shall be rejected with error code INVALID_AMOUNT.
+Null or empty amounts shall be rejected with error code MISSING_AMOUNT.
+Negative amounts shall be rejected with error code NEGATIVE_AMOUNT.
+
+REQ-002: Currency Code Validation
+The system shall accept payments in the following currencies only:
+USD, GBP, EUR, JPY, CHF, AUD, CAD, HKD.
+Invalid currency codes shall be rejected with error code INVALID_CURRENCY.
+Currency codes are case-insensitive but must be exactly 3 characters.
+
+REQ-003: Payment Idempotency
+The system shall process each payment exactly once.
+Duplicate payments with the same idempotency_key shall return
+the original payment response without creating a new payment.
+Idempotency keys must be unique per merchant.
+
+REQ-004: Settlement Date Rules
+Settlement date must be on or after the transaction date.
+Settlement date must not be more than 5 business days after transaction date.
+Null settlement dates shall default to transaction date + 1 business day.
+
+REQ-005: Customer ID Validation
+Every payment must be associated with a valid customer_id.
+customer_id must be a non-null UUID format string.
+Payments without a valid customer_id shall be rejected
+with error code MISSING_CUSTOMER.
